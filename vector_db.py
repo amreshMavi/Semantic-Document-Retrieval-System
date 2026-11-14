@@ -14,7 +14,7 @@ class QdrantStorage:
             )
 
     def upsert(self, ids, vectors, payloads):
-        points = [PointStruct(id=ids, vector=vectors[i], payload=payloads[i]) for i in range(len(ids))]
+        points = [PointStruct(id=ids[i], vector=vectors[i], payload=payloads[i]) for i in range(len(ids))]
         # Creating a pointstructure to insert into the vector db
         self.client.upsert(self.collection, points=points)
 
