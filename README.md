@@ -84,7 +84,7 @@ venv\Scripts\activate           # Windows
 ### 3. Install Dependencies
 
 ```bash
-uv add fastapi inngest llama-index-core llama-index-readers-file python-dotenv qdrant-client uvicorn streamlit openai
+uv add fastapi inngest llama-index-core llama-index-readers-file python-dotenv qdrant-client uvicorn streamlit openai python-dotenv requests
 ```
 
 ### 4. Configure Environment Variables
