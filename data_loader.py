@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = OpenAI()
+@lru_cache(maxsize=1)
+def _client() -> OpenAI:
+    return OpenAI()
 EMBED_MODEL = "text-embedding-3-large"
 EMBED_DIM = 3072
 
@@ -21,9 +23,12 @@ def load_and_chunk_pdf(path: str):
         chunks.extend(splitter.split_text(t))
     return chunks
 
-def embed_texts(texts: list[str]) -> list[list[float]]:
-    response = client.embeddings.create(
-        model=EMBED_MODEL,
-        input=texts,
-    )
-    return [item.embedding for item in response.data]
+EMBED_BATCH_SIZE = 100
+
+def embed_texts(texts):
+    vectors = []
+    for i in range(0, len(texts), EMBED_BATCH_SIZE):
+        batch = texts[i : i + EMBED_BATCH_SIZE]
+        response = _client().embeddings.create(model=EMBED_MODEL, input=batch)
+        vectors.extend(item.embedding for item in response.data)
+    return vectors
